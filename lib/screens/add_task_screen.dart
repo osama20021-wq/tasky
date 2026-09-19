@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
+import 'package:flutter_application_4/screens/main_screen.dart';
 import 'package:flutter_application_4/widgets/task_input_field.dart';
 import 'package:flutter_application_4/widgets/task_switch.dart';
 import 'package:flutter_application_4/widgets/tasks_done_button.dart';
@@ -50,7 +51,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               );
               tasks.add(taskModel.toJson());
               await sharedPref.setString("allTasks", jsonEncode(tasks));
-              Navigator.of(context).pop(true);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MainScreen()),
+              );
             },
             icon: Icon(Icons.add),
           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
+import 'package:flutter_application_4/widgets/tasks_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CompletedTasksScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class _CompletedScreenState extends State<CompletedTasksScreen> {
   List<TaskModel> completedTask = [];
   @override
   void initState() {
+    getTasks();
     super.initState();
   }
 
@@ -33,14 +35,48 @@ class _CompletedScreenState extends State<CompletedTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "Welcome To Tasky compeleted ",
-        style: TextStyle(
-          fontSize: 24,
-          color: Color(0xFFFFFFFF),
-          fontWeight: FontWeight.w400,
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+      child: Column(
+        children: [
+          SizedBox(height: 18),
+          Row(
+            children: [
+              Text(
+                "Compeleted Tasks",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Color(0xFFFFFFFF),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: completedTask.isEmpty
+                ? Center(
+                    child: Text(
+                      "No tasks compeleted",
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Color(0xFFFFFFFF),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 18),
+                        TasksList(
+                          tasks: completedTask,
+                          onTap: (isDone, index) {},
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }

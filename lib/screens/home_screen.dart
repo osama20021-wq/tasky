@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_application_4/screens/add_task_screen.dart';
+import 'package:flutter_application_4/widgets/high_priority.dart';
 import 'package:flutter_application_4/widgets/tasks_done_button.dart';
+import 'package:flutter_application_4/widgets/tasks_list.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .toList();
       });
     }
+    print("tasks");
   }
 
   @override
@@ -163,6 +166,38 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 16),
+                          HighPriority(onTap: (value, index) {}),
+                          SizedBox(height: 24),
+
+                          Text(
+                            "My Tasks",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Color(0xFFFFFCFC),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          TasksList(
+                            tasks: tasks,
+                            onTap: (isDone, index) async {
+                              setState(() {
+                                tasks[index].isDone = isDone!;
+                              });
+                              final sharedPref =
+                                  await SharedPreferences.getInstance();
+                              final updateTasks = tasks
+                                  .map((e) => e.toJson())
+                                  .toList();
+                              await sharedPref.setString(
+                                "allTasks",
+                                jsonEncode(updateTasks),
+                              );
+                            },
+                          ),
+
+                          SizedBox(height: 80),
                         ],
                       ),
                     ),

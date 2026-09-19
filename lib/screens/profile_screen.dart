@@ -34,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 18),
           Text(
             "My Profile",
             style: TextStyle(
@@ -42,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontWeight: FontWeight.w400,
             ),
           ),
+          // why?
           SizedBox(height: 24),
           Center(
             child: Column(
