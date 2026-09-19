@@ -48,7 +48,7 @@ class _ToDoTasksScreenState extends State<ToDoTasksScreen> {
               Text(
                 "To Do Tasks",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 20,
                   color: Color(0xFFFFFFFF),
                   fontWeight: FontWeight.w400,
                 ),
@@ -61,7 +61,7 @@ class _ToDoTasksScreenState extends State<ToDoTasksScreen> {
                     child: Text(
                       "There are no tasks to do",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 25,
                         color: Color(0xFFFFFFFF),
                         fontWeight: FontWeight.w700,
                       ),

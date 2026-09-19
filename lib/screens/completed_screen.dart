@@ -45,7 +45,7 @@ class _CompletedScreenState extends State<CompletedTasksScreen> {
               Text(
                 "Compeleted Tasks",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 20,
                   color: Color(0xFFFFFFFF),
                   fontWeight: FontWeight.w400,
                 ),

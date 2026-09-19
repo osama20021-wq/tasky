@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
@@ -21,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String username = "";
   List<TaskModel> tasks = [];
+  int totalTasks = 0;
+  int achivedTask = 0;
+  double persentge = 0;
 
   @override
   void initState() {
@@ -44,9 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
         tasks = (jsonDecode(getSharedPref) as List)
             .map((e) => TaskModel.fromJson(e))
             .toList();
+        calculator();
       });
     }
-    print("tasks");
+  }
+
+  void calculator() {
+    totalTasks = tasks.length;
+    achivedTask = tasks.where((element) => element.isDone).length;
+    persentge = totalTasks != 0 ? (achivedTask / totalTasks) : 0;
   }
 
   @override
@@ -167,7 +177,73 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF282828),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Achieved Tasks",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xFFFFFCFC),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "$achivedTask Out of $totalTasks Done",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Color(0xFFC6C6C6),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Stack(
+                                  alignment: AlignmentGeometry.center,
+                                  children: [
+                                    Transform.rotate(
+                                      angle: -pi / 2,
+                                      child: CircularProgressIndicator(
+                                        strokeAlign: 2,
+                                        strokeWidth: 4,
+                                        value: persentge,
+                                        color: Color(0xFF15B86C),
+                                      ),
+                                    ),
+
+                                    Text(
+                                      "${(persentge * 100).toInt()}%",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFFFFFCFC),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 8),
                           HighPriority(onTap: (value, index) {}),
+
                           SizedBox(height: 24),
 
                           Text(
@@ -184,6 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: (isDone, index) async {
                               setState(() {
                                 tasks[index].isDone = isDone!;
+                                calculator();
                               });
                               final sharedPref =
                                   await SharedPreferences.getInstance();
