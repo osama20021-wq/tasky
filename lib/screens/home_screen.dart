@@ -9,6 +9,7 @@ import 'package:flutter_application_4/screens/add_task_screen.dart';
 import 'package:flutter_application_4/widgets/high_priority.dart';
 import 'package:flutter_application_4/widgets/tasks_done_button.dart';
 import 'package:flutter_application_4/widgets/tasks_list.dart';
+import 'package:flutter_application_4/widgets/user_welcome.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future changeCheckBox(int index, bool? isDone) async {
+    setState(() {
+      tasks[index].isDone = isDone!;
+      calculator();
+    });
+    final sharedPref = await SharedPreferences.getInstance();
+    final updateTasks = tasks.map((e) => e.toJson()).toList();
+    await sharedPref.setString("allTasks", jsonEncode(updateTasks));
+  }
+
   void calculator() {
     totalTasks = tasks.length;
     achivedTask = tasks.where((element) => element.isDone).length;
@@ -77,78 +88,31 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Image.asset("images/person.png"),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Good Evening ,$username",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFFFFFCFC),
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 1,
-                      ),
-                      Text(
-                        "One task at a time.One steps\ncloser.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFFC6C6C6),
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                CircleAvatar(
-                  backgroundColor: Color(0xFF282828),
-                  child: SizedBox(
-                    height: 34,
-                    width: 34,
-                    child: IconButton(
-                      color: Color(0xFF282828),
-                      onPressed: () {},
-                      icon: SvgPicture.asset(
-                        "images/Icon-light.svg",
-                        colorFilter: ColorFilter.mode(
-                          Color(0xFFFFFCFC),
-                          BlendMode.srcIn,
-                        ),
-                        height: 18,
-                        width: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
             Expanded(
               child: tasks.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No Tasks Founded",
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Color(0xFFFFFCFC),
-                          fontWeight: FontWeight.w400,
+                  ? Column(
+                      children: [
+                        UserWelcome(username: username),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "There are no founded",
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Color(0xFFFFFCFC),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     )
                   : SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          UserWelcome(username: username),
                           SizedBox(height: 16),
                           Text(
                             "Yuhuu ,Your work Is ",
@@ -242,7 +206,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          HighPriority(onTap: (value, index) {}),
+                          HighPriority(
+                            priorityTask: tasks
+                                .where((element) => element.isHighPriority)
+                                .toList(),
+                            getTasks: () => getTasks(),
+                            onTap: (value, index) {
+                              changeCheckBox(index, value);
+                            },
+                          ),
 
                           SizedBox(height: 24),
 
@@ -258,23 +230,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           TasksList(
                             tasks: tasks,
                             onTap: (isDone, index) async {
-                              setState(() {
-                                tasks[index].isDone = isDone!;
-                                calculator();
-                              });
-                              final sharedPref =
-                                  await SharedPreferences.getInstance();
-                              final updateTasks = tasks
-                                  .map((e) => e.toJson())
-                                  .toList();
-                              await sharedPref.setString(
-                                "allTasks",
-                                jsonEncode(updateTasks),
-                              );
+                              changeCheckBox(index, isDone);
                             },
                           ),
 
-                          SizedBox(height: 80),
+                          SizedBox(height: 60),
                         ],
                       ),
                     ),

@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontWeight: FontWeight.w400,
             ),
             leading: SvgPicture.asset("images/Leading-element.svg"),
-            title: Text("User Details"),
+            title: Text("Dark Mode"),
             trailing: TaskSwitch(
               isDone: isDarkMode,
               onTap: (value) {
@@ -132,7 +132,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(),
           ListTile(
             contentPadding: EdgeInsets.zero,
-
             titleTextStyle: TextStyle(
               color: Color(0xFFFFFCFC),
               fontSize: 16,
@@ -140,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onTap: () {},
             leading: SvgPicture.asset("images/log-out-01.svg"),
-            title: Text("User Details"),
+            title: Text("Log out"),
             trailing: SvgPicture.asset("images/arrow-right.svg"),
           ),
         ],

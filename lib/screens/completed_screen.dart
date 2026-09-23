@@ -56,9 +56,9 @@ class _CompletedScreenState extends State<CompletedTasksScreen> {
             child: completedTask.isEmpty
                 ? Center(
                     child: Text(
-                      "No tasks compeleted",
+                      "There are no founded",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 25,
                         color: Color(0xFFFFFFFF),
                         fontWeight: FontWeight.w700,
                       ),
@@ -70,7 +70,34 @@ class _CompletedScreenState extends State<CompletedTasksScreen> {
                         SizedBox(height: 18),
                         TasksList(
                           tasks: completedTask,
-                          onTap: (isDone, index) {},
+                          onTap: (isDone, index) async {
+                            final sharedPref =
+                                await SharedPreferences.getInstance();
+                            final getSharedPref = sharedPref.getString(
+                              "allTasks",
+                            );
+                            setState(() {
+                              completedTask[index].isDone = isDone ?? false;
+                            });
+
+                            if (getSharedPref != null) {
+                              List<TaskModel> updatedTask =
+                                  (jsonDecode(getSharedPref) as List)
+                                      .map((e) => TaskModel.fromJson(e))
+                                      .toList();
+                              int taskIndex = updatedTask.indexWhere(
+                                (element) =>
+                                    element.taskId ==
+                                    completedTask[index].taskId,
+                              );
+                              updatedTask[taskIndex] = completedTask[index];
+                              await sharedPref.setString(
+                                "allTasks",
+                                jsonEncode(updatedTask),
+                              );
+                              getTasks();
+                            }
+                          },
                         ),
                       ],
                     ),

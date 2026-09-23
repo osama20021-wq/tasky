@@ -59,7 +59,7 @@ class _ToDoTasksScreenState extends State<ToDoTasksScreen> {
             child: toDoTasks.isEmpty
                 ? Center(
                     child: Text(
-                      "There are no tasks to do",
+                      "There are no founded",
                       style: TextStyle(
                         fontSize: 25,
                         color: Color(0xFFFFFFFF),
@@ -71,7 +71,35 @@ class _ToDoTasksScreenState extends State<ToDoTasksScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: 18),
-                        TasksList(tasks: toDoTasks, onTap: (isDone, index) {}),
+                        TasksList(
+                          tasks: toDoTasks,
+                          onTap: (isDone, index) async {
+                            setState(() {
+                              toDoTasks[index].isDone = isDone ?? false;
+                            });
+                            final sharedPref =
+                                await SharedPreferences.getInstance();
+                            final getSharedPref = sharedPref.getString(
+                              "allTasks",
+                            );
+                            if (getSharedPref != null) {
+                              List<TaskModel> updatedTask =
+                                  (jsonDecode(getSharedPref) as List)
+                                      .map((e) => TaskModel.fromJson(e))
+                                      .toList();
+                              int taskIndex = updatedTask.indexWhere(
+                                (element) =>
+                                    element.taskId == toDoTasks[index].taskId,
+                              );
+                              updatedTask[taskIndex] = toDoTasks[index];
+                              await sharedPref.setString(
+                                "allTasks",
+                                jsonEncode(updatedTask),
+                              );
+                              getTasks();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),

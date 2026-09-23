@@ -1,40 +1,22 @@
 // ignore_for_file: must_be_immutable
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HighPriority extends StatefulWidget {
-  HighPriority({super.key, required this.onTap});
+class HighPriority extends StatelessWidget {
+  HighPriority({
+    super.key,
+    required this.priorityTask,
+    required this.onTap,
+    required this.getTasks,
+  });
+  List<TaskModel> priorityTask;
 
   Function(bool? value, int index) onTap;
-  @override
-  State<HighPriority> createState() => _HighPriorityState();
-}
 
-class _HighPriorityState extends State<HighPriority> {
-  List<TaskModel> priorityTask = [];
-
-  @override
-  void initState() {
-    getTasks();
-    super.initState();
-  }
-
-  Future getTasks() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    final getSharedPref = sharedPref.getString("allTasks");
-    if (getSharedPref != null) {
-      setState(() {
-        priorityTask = (jsonDecode(getSharedPref) as List)
-            .map((e) => TaskModel.fromJson(e))
-            .where((element) => element.isHighPriority == true)
-            .toList();
-      });
-    }
-  }
+  Function getTasks;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +82,7 @@ class _HighPriorityState extends State<HighPriority> {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: priorityTask.length,
+                  itemCount: priorityTask.take(4).length,
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
@@ -110,10 +92,8 @@ class _HighPriorityState extends State<HighPriority> {
                           visualDensity: VisualDensity.compact,
                           activeColor: const Color(0xFF15B86C),
                           value: priorityTask[index].isDone,
-                          onChanged: (value) {
-                            setState(() {
-                              priorityTask[index].isDone = value ?? false;
-                            });
+                          onChanged: (value) async {
+                            onTap(value, index);
                           },
                         ),
                         SizedBox(width: 8),
