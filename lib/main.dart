@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_4/screens/main_screen.dart';
 import 'package:flutter_application_4/screens/welcome_screen.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPref = await SharedPreferences.getInstance();
-  final userName = sharedPref.getString("username");
+  final username = sharedPref.getString("username");
   runApp(
     MaterialApp(
       theme: ThemeData(
@@ -20,7 +18,7 @@ Future<void> main() async {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: userName == null ? WelcomeScreen() : MyApp(),
+      home: username == null ? WelcomeScreen() : MyApp(),
     ),
   );
 }
@@ -30,13 +28,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF181818),
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      child: Scaffold(body: MainScreen()),
-    );
+    return Scaffold(body: MainScreen());
   }
 }

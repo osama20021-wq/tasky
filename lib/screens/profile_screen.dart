@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/widgets/task_switch.dart';
+import 'package:flutter_application_4/screens/user_details.dart';
+import 'package:flutter_application_4/widgets/task_switch_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,120 +30,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 18),
-          Text(
-            "My Profile",
-            style: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "My Profile",
+              style: TextStyle(
+                color: Color(0xFFFFFCFC),
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          ),
-          // why?
-          SizedBox(height: 24),
-          Center(
-            child: Column(
-              children: [
-                Stack(
-                  alignment: AlignmentGeometry.bottomRight,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 60,
-                      backgroundImage: AssetImage("images/person.png"),
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Color(0xFF282828),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: SvgPicture.asset("images/camera-01.svg"),
+            // why?
+            SizedBox(height: 24),
+            Center(
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: AlignmentGeometry.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 60,
+                        backgroundImage: AssetImage("images/person.png"),
                       ),
+                      CircleAvatar(
+                        backgroundColor: Color(0xFF282828),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: SvgPicture.asset("images/camera-01.svg"),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    username,
+                    style: TextStyle(
+                      color: Color(0xFFFFFCFC),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Text(
-                  username,
-                  style: TextStyle(
-                    color: Color(0xFFFFFCFC),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
                   ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "One task at a time. One step closer.",
-                  style: TextStyle(
-                    color: Color(0xFFC6C6C6),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                  SizedBox(height: 4),
+                  Text(
+                    "One task at a time. One step closer.",
+                    style: TextStyle(
+                      color: Color(0xFFC6C6C6),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 24),
+            SizedBox(height: 24),
 
-          Text(
-            "Profile Info",
-            style: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
+            Text(
+              "Profile Info",
+              style: TextStyle(
+                color: Color(0xFFFFFCFC),
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          ),
-          SizedBox(height: 8),
+            SizedBox(height: 8),
 
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            titleTextStyle: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            onTap: () {},
-            leading: SvgPicture.asset("images/Icon-person.svg"),
-            title: Text("User Details"),
-            trailing: SvgPicture.asset("images/arrow-right.svg"),
-          ),
-          Divider(),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            titleTextStyle: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            leading: SvgPicture.asset("images/Leading-element.svg"),
-            title: Text("Dark Mode"),
-            trailing: TaskSwitch(
-              isDone: isDarkMode,
-              onTap: (value) {
-                setState(() {
-                  isDarkMode = value;
-                });
+            ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(20),
+              ),
+              contentPadding: EdgeInsets.zero,
+              titleTextStyle: TextStyle(
+                color: Color(0xFFFFFCFC),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserDetails()),
+                );
               },
+              leading: SvgPicture.asset("images/Icon-person.svg"),
+              title: Text("User Details"),
+              trailing: SvgPicture.asset("images/arrow-right.svg"),
             ),
-          ),
-          Divider(),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            titleTextStyle: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
+            Divider(),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              titleTextStyle: TextStyle(
+                color: Color(0xFFFFFCFC),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+              leading: SvgPicture.asset("images/Leading-element.svg"),
+              title: Text("Dark Mode"),
+              trailing: TaskSwitchWidget(
+                isDone: isDarkMode,
+                onTap: (value) {
+                  setState(() {
+                    isDarkMode = value;
+                  });
+                },
+              ),
             ),
-            onTap: () {},
-            leading: SvgPicture.asset("images/log-out-01.svg"),
-            title: Text("Log out"),
-            trailing: SvgPicture.asset("images/arrow-right.svg"),
-          ),
-        ],
+            Divider(),
+            ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(20),
+              ),
+              contentPadding: EdgeInsets.zero,
+              titleTextStyle: TextStyle(
+                color: Color(0xFFFFFCFC),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+              onTap: () {},
+              leading: SvgPicture.asset("images/log-out-01.svg"),
+              title: Text("Log out"),
+              trailing: SvgPicture.asset("images/arrow-right.svg"),
+            ),
+          ],
+        ),
       ),
     );
   }

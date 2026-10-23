@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-class TaskSwitch extends StatelessWidget {
-  TaskSwitch({super.key, required this.isDone, required this.onTap});
+class TaskSwitchWidget extends StatelessWidget {
+  TaskSwitchWidget({super.key, required this.isDone, required this.onTap});
   bool isDone = true;
   Function(bool value) onTap;
 

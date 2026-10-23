@@ -3,16 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 
-class TasksList extends StatelessWidget {
-  TasksList({super.key, required this.tasks, required this.onTap});
-  List<TaskModel> tasks = [];
-  Function(bool? isDone, int index) onTap;
-
+class TaskListWidget extends StatelessWidget {
+  TaskListWidget({super.key, required this.tasks, required this.onTap});
+  final List<TaskModel> tasks;
+  Function(bool? value, int index) onTap;
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+    return SliverList.builder(
       itemCount: tasks.length,
       itemBuilder: (context, index) {
         return Container(
@@ -20,6 +17,7 @@ class TasksList extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             color: Color(0xFF282828),
           ),
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           padding: EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
@@ -52,7 +50,8 @@ class TasksList extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    if (tasks[index].isDone == false)
+                    if (tasks[index].isDone == false &&
+                        tasks[index].taskDescription.isNotEmpty)
                       Text(
                         tasks[index].taskDescription,
                         style: TextStyle(
@@ -78,9 +77,6 @@ class TasksList extends StatelessWidget {
             ],
           ),
         );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 8);
       },
     );
   }

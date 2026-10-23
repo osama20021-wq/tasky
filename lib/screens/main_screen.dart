@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_4/screens/completed_screen.dart';
+import 'package:flutter_application_4/screens/compelete_task_screen.dart';
 import 'package:flutter_application_4/screens/home_screen.dart';
 import 'package:flutter_application_4/screens/profile_screen.dart';
-import 'package:flutter_application_4/screens/to_do_tasks_screen.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_application_4/screens/to_do_task_screen.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,13 +14,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _index = 0;
-  final List<Widget> _screens = [
+  List<Widget> screens = [
     HomeScreen(),
-    ToDoTasksScreen(),
-    CompletedTasksScreen(),
+    ToDoTaskScreen(),
+    CompeleteTaskScreen(),
     ProfileScreen(),
   ];
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -33,59 +33,58 @@ class _MainScreenState extends State<MainScreen> {
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: Color(0xFF181818),
-          currentIndex: _index,
           selectedItemColor: Color(0xFF15B86C),
-          unselectedItemColor: Color(0xFFC6C6C6),
-
+          unselectedItemColor: Color(0xFFFFFCFC),
+          currentIndex: _currentIndex,
           onTap: (int? value) {
             setState(() {
-              _index = value ?? 0;
+              _currentIndex = value ?? 0;
             });
           },
           items: [
             BottomNavigationBarItem(
               label: "Home",
               icon: SvgPicture.asset(
+                "images/Icon-home.svg",
                 colorFilter: ColorFilter.mode(
-                  _index == 0 ? Color(0xFF15B86C) : Color(0xFFC6C6C6),
+                  _currentIndex == 0 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
                   BlendMode.srcIn,
                 ),
-                "images/Icon-home.svg",
               ),
             ),
             BottomNavigationBarItem(
               label: "To Do",
               icon: SvgPicture.asset(
+                "images/Icon-todo.svg",
                 colorFilter: ColorFilter.mode(
-                  _index == 1 ? Color(0xFF15B86C) : Color(0xFFC6C6C6),
+                  _currentIndex == 1 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
                   BlendMode.srcIn,
                 ),
-                "images/Icon-todo.svg",
               ),
             ),
             BottomNavigationBarItem(
               label: "Completed",
               icon: SvgPicture.asset(
+                "images/Icon-completed.svg",
                 colorFilter: ColorFilter.mode(
-                  _index == 2 ? Color(0xFF15B86C) : Color(0xFFC6C6C6),
+                  _currentIndex == 2 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
                   BlendMode.srcIn,
                 ),
-                "images/Icon-completed.svg",
               ),
             ),
             BottomNavigationBarItem(
               label: "Profile",
               icon: SvgPicture.asset(
+                "images/Icon-person.svg",
                 colorFilter: ColorFilter.mode(
-                  _index == 3 ? Color(0xFF15B86C) : Color(0xFFC6C6C6),
+                  _currentIndex == 3 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
                   BlendMode.srcIn,
                 ),
-                "images/Icon-person.svg",
               ),
             ),
           ],
         ),
-        body: SafeArea(child: _screens[_index]),
+        body: SafeArea(child: screens[_currentIndex]),
       ),
     );
   }

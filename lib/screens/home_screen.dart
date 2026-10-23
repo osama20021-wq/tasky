@@ -1,16 +1,14 @@
-// ignore_for_file: file_names
-
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_application_4/screens/add_task_screen.dart';
-import 'package:flutter_application_4/widgets/high_priority.dart';
-import 'package:flutter_application_4/widgets/tasks_done_button.dart';
-import 'package:flutter_application_4/widgets/tasks_list.dart';
-import 'package:flutter_application_4/widgets/user_welcome.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_application_4/widgets/achived_task.dart';
+import 'package:flutter_application_4/widgets/done_button_widget.dart';
+import 'package:flutter_application_4/widgets/empty_task_widget.dart';
+import 'package:flutter_application_4/widgets/high_priority_widget.dart';
+import 'package:flutter_application_4/widgets/task_list_widget.dart';
+import 'package:flutter_application_4/widgets/user_welcome_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,26 +20,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String username = "";
-  List<TaskModel> tasks = [];
-  int totalTasks = 0;
+  int totalTask = 0;
   int achivedTask = 0;
-  double persentge = 0;
+  double persentage = 0;
+  List<TaskModel> tasks = [];
 
-  @override
-  void initState() {
-    getUsername();
-    getTasks();
-    super.initState();
-  }
-
-  Future getUsername() async {
+  Future _getUsername() async {
     final sharedPref = await SharedPreferences.getInstance();
     setState(() {
-      username = sharedPref.getString("username") ?? "Guest";
+      username = sharedPref.getString("username") ?? "guest";
     });
   }
 
-  Future getTasks() async {
+  Future _getTasks() async {
     final sharedPref = await SharedPreferences.getInstance();
     final getSharedPref = sharedPref.getString("allTasks");
     if (getSharedPref != null) {
@@ -49,25 +40,32 @@ class _HomeScreenState extends State<HomeScreen> {
         tasks = (jsonDecode(getSharedPref) as List)
             .map((e) => TaskModel.fromJson(e))
             .toList();
-        calculator();
+        _calculate();
       });
     }
   }
 
-  Future changeCheckBox(int index, bool? isDone) async {
-    setState(() {
-      tasks[index].isDone = isDone!;
-      calculator();
-    });
-    final sharedPref = await SharedPreferences.getInstance();
-    final updateTasks = tasks.map((e) => e.toJson()).toList();
-    await sharedPref.setString("allTasks", jsonEncode(updateTasks));
+  void _calculate() {
+    totalTask = tasks.length;
+    achivedTask = tasks.where((element) => element.isDone).length;
+    persentage = totalTask != 0 ? (achivedTask / totalTask) : 0;
   }
 
-  void calculator() {
-    totalTasks = tasks.length;
-    achivedTask = tasks.where((element) => element.isDone).length;
-    persentge = totalTasks != 0 ? (achivedTask / totalTasks) : 0;
+  void _changeBox(bool? value, int index) async {
+    final sharedPref = await SharedPreferences.getInstance();
+
+    setState(() {
+      tasks[index].isDone = value ?? false;
+      _calculate();
+    });
+    await sharedPref.setString("allTasks", jsonEncode(tasks));
+  }
+
+  @override
+  void initState() {
+    _getUsername();
+    _getTasks();
+    super.initState();
   }
 
   @override
@@ -76,172 +74,69 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: SizedBox(
         height: 40,
         width: 167,
-        child: TasksDoneButton(
-          label: "Add New Task",
-          function: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTaskScreen()),
-          ),
+        child: DoneButtonWidget(
+          title: "Add New Task",
+          onTap: () async {
+            bool? result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddTaskScreen()),
+            );
+            if (result != null || result == true) {
+              _getTasks();
+            }
+          },
           icon: Icon(Icons.add),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
-        child: Column(
-          children: [
-            Expanded(
-              child: tasks.isEmpty
-                  ? Column(
+      body: tasks.isNotEmpty
+          ? CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: UserWelcomeWidget(username: username, tasks: tasks),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        UserWelcome(username: username),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              "There are no founded",
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Color(0xFFFFFCFC),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                        AchivedTask(
+                          totalTask: totalTask,
+                          achivedTask: achivedTask,
+                          persentage: persentage,
+                        ),
+                        SizedBox(height: 8),
+
+                        HighPriorityWidget(
+                          highPriority: tasks,
+                          onTap: (value, index) async {
+                            _changeBox(value, index);
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "My Tasks",
+                          style: TextStyle(
+                            color: Color(0xFFFFFCFC),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
+                        SizedBox(height: 16),
                       ],
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UserWelcome(username: username),
-                          SizedBox(height: 16),
-                          Text(
-                            "Yuhuu ,Your work Is ",
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: Color(0xFFFFFCFC),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Row(
-                            // high row
-                            children: [
-                              Text(
-                                "almost done ! ",
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  color: Color(0xFFFFFCFC),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SvgPicture.asset(
-                                "images/waving-hand.svg",
-                                height: 28,
-                                width: 28,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF282828),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Achieved Tasks",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xFFFFFCFC),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        "$achivedTask Out of $totalTasks Done",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xFFC6C6C6),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                Stack(
-                                  alignment: AlignmentGeometry.center,
-                                  children: [
-                                    Transform.rotate(
-                                      angle: -pi / 2,
-                                      child: CircularProgressIndicator(
-                                        strokeAlign: 2,
-                                        strokeWidth: 4,
-                                        value: persentge,
-                                        color: Color(0xFF15B86C),
-                                      ),
-                                    ),
-
-                                    Text(
-                                      "${(persentge * 100).toInt()}%",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFFFFFCFC),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          HighPriority(
-                            priorityTask: tasks
-                                .where((element) => element.isHighPriority)
-                                .toList(),
-                            getTasks: () => getTasks(),
-                            onTap: (value, index) {
-                              changeCheckBox(index, value);
-                            },
-                          ),
-
-                          SizedBox(height: 24),
-
-                          Text(
-                            "My Tasks",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFFFFFCFC),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          TasksList(
-                            tasks: tasks,
-                            onTap: (isDone, index) async {
-                              changeCheckBox(index, isDone);
-                            },
-                          ),
-
-                          SizedBox(height: 60),
-                        ],
-                      ),
                     ),
-            ),
-          ],
-        ),
-      ),
+                  ),
+                ),
+                TaskListWidget(
+                  tasks: tasks,
+                  onTap: (value, index) {
+                    _changeBox(value, index);
+                  },
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: 60)),
+              ],
+            )
+          : EmptyTaskWidget(username: username, emptyTaskMessage: "No Tasks"),
     );
   }
 }
