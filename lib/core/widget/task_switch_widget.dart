@@ -10,7 +10,9 @@ class TaskSwitchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Switch(
+      activeThumbColor: Color(0xFFFFFFFF),
       activeTrackColor: Color(0xFF15B86C),
+      inactiveTrackColor: Color(0xFFFFFFFF),
       value: isDone,
       onChanged: (value) => onTap(value),
     );

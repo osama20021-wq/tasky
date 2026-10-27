@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 
 class TaskListWidget extends StatelessWidget {
@@ -15,7 +16,10 @@ class TaskListWidget extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Color(0xFF282828),
+            border: ThemeController().isDark()
+                ? null
+                : BoxBorder.all(color: Color(0xFFD1DAD6)),
+            color: Theme.of(context).cardColor,
           ),
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           padding: EdgeInsets.symmetric(vertical: 8),
@@ -24,6 +28,7 @@ class TaskListWidget extends StatelessWidget {
               SizedBox(width: 4),
               Checkbox(
                 activeColor: Color(0xFF15B86C),
+                checkColor: Color(0xFFFFFFFF),
                 value: tasks[index].isDone,
                 onChanged: (value) async => await onTap(value, index),
               ),
@@ -37,8 +42,8 @@ class TaskListWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         color: tasks[index].isDone
-                            ? Color(0xFFA0A0A0)
-                            : Color(0xFFFFFCFC),
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).primaryColorLight,
                         fontWeight: FontWeight.w400,
                         decoration: tasks[index].isDone
                             ? TextDecoration.lineThrough
@@ -56,7 +61,7 @@ class TaskListWidget extends StatelessWidget {
                         tasks[index].taskDescription,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFFC6C6C6),
+                          color: Theme.of(context).primaryColorDark,
                           fontWeight: FontWeight.w400,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -70,8 +75,8 @@ class TaskListWidget extends StatelessWidget {
                 icon: Icon(
                   Icons.more_vert_outlined,
                   color: tasks[index].isDone
-                      ? Color(0xFFA0A0A0)
-                      : Color(0xFFC6C6C6),
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).primaryColorDark,
                 ),
               ),
             ],

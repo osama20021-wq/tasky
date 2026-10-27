@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/screens/main_screen.dart';
-import 'package:flutter_application_4/widgets/done_button_widget.dart';
-import 'package:flutter_application_4/widgets/input_field_widget.dart';
+import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
+import 'package:flutter_application_4/core/widget/custome_text_form_field_widget.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});
@@ -16,9 +16,8 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF181818),
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        statusBarIconBrightness: Theme.of(context).brightness,
       ),
       child: Scaffold(
         body: SafeArea(
@@ -47,11 +46,8 @@ class WelcomeScreen extends StatelessWidget {
                               SizedBox(width: 9),
                               Text(
                                 "Tasky",
-                                style: TextStyle(
-                                  color: Color(0xFFFFFFFF),
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontSize: 28),
                               ),
                             ],
                           ),
@@ -61,11 +57,8 @@ class WelcomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Welcome To Tasky ",
-                                style: TextStyle(
-                                  color: Color(0xFFFFFFFF),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontSize: 24),
                               ),
                               SvgPicture.asset(
                                 "images/waving-hand.svg",
@@ -76,11 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                           Text(
                             "Your productivity journey starts here.",
-                            style: TextStyle(
-                              color: Color(0xFFFFFCFC),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           SizedBox(height: 24),
                           SvgPicture.asset(
@@ -92,33 +81,25 @@ class WelcomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // enter full name
-                    Text(
-                      "Full Name",
-                      style: TextStyle(
-                        color: Color(0xFFFFFCFC),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 8),
+
                     // add name
-                    InputFieldWidget(
+                    CustomeTextFormFieldWidget(
+                      title: "Full Name",
                       maxLine: 1,
                       fieldName: "e.g. Sarah Khalid",
                       controller: _controller,
+
+                      //      addBorder: true,
                     ),
                     SizedBox(height: 24),
                     SizedBox(
                       height: 40,
                       width: double.infinity,
-                      child: DoneButtonWidget(
+                      child: CustomeElevatedButton(
                         title: "Let’s Get Started",
                         onTap: () async {
                           if (_key.currentState?.validate() ?? false) {
-                            final sharedPref =
-                                await SharedPreferences.getInstance();
-                            await sharedPref.setString(
+                            PrefrenceManager().setString(
                               "username",
                               _controller.text,
                             );

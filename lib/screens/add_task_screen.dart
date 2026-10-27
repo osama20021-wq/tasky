@@ -4,11 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/models/task_model.dart';
-import 'package:flutter_application_4/widgets/done_button_widget.dart';
-import 'package:flutter_application_4/widgets/input_field_widget.dart';
-import 'package:flutter_application_4/widgets/task_switch_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
+import 'package:flutter_application_4/core/widget/custome_text_form_field_widget.dart';
+import 'package:flutter_application_4/core/widget/task_switch_widget.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -37,13 +37,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: SizedBox(
             height: 40,
             width: double.infinity,
-            child: DoneButtonWidget(
+            child: CustomeElevatedButton(
               icon: Icon(Icons.add),
               title: "Add Task",
               onTap: () async {
                 if (_form.currentState?.validate() ?? false) {
-                  final sharedPref = await SharedPreferences.getInstance();
-                  final getSharedPref = sharedPref.getString("allTasks");
+                  final getSharedPref = PrefrenceManager().getString(
+                    "allTasks",
+                  );
                   List<dynamic> tasks = [];
                   if (getSharedPref != null) {
                     tasks = jsonDecode(getSharedPref);
@@ -55,7 +56,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     isHighPriority: _isHighPriority,
                   );
                   tasks.add(taskModel.toJson());
-                  await sharedPref.setString("allTasks", jsonEncode(tasks));
+                  await PrefrenceManager().setString(
+                    "allTasks",
+                    jsonEncode(tasks),
+                  );
                   Navigator.of(context).pop(true);
                 }
               },
@@ -65,11 +69,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         appBar: AppBar(
           title: Text(
             "New Task",
-            style: TextStyle(
-              color: Color(0xFFFFFCFC),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge!
+                .copyWith(fontSize: 20),
           ),
         ),
         body: SafeArea(
@@ -80,34 +81,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // enter full name
-                  Text(
-                    "Task Name",
-                    style: TextStyle(
-                      color: Color(0xFFFFFCFC),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  // add name
-                  InputFieldWidget(
+                  // task name
+                  CustomeTextFormFieldWidget(
+                    title: "Task Name",
                     maxLine: 1,
                     fieldName: "Finish UI design for login screen",
                     controller: _taskNameController,
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    "Task Description",
-                    style: TextStyle(
-                      color: Color(0xFFFFFCFC),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  // add name
-                  InputFieldWidget(
+
+                  // Task Description
+                  CustomeTextFormFieldWidget(
+                    title: "Task Description",
                     maxLine: 5,
                     fieldName: "Finish onboarding UI and hand off to devs by Thursday.",
                     controller: _taskDescController,

@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/screens/main_screen.dart';
-import 'package:flutter_application_4/widgets/done_button_widget.dart';
-import 'package:flutter_application_4/widgets/input_field_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
+import 'package:flutter_application_4/core/widget/custome_text_form_field_widget.dart';
 
 class UserDetails extends StatefulWidget {
-  const UserDetails({super.key});
+  const UserDetails({super.key, required this.username});
+  final String username;
 
   @override
   State<UserDetails> createState() => _UserDetailsState();
@@ -16,8 +17,17 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   final TextEditingController _userNameController = TextEditingController();
+
   final TextEditingController _motivationController = TextEditingController();
+
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _userNameController.text = widget.username;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -32,16 +42,15 @@ class _UserDetailsState extends State<UserDetails> {
           child: SizedBox(
             height: 40,
             width: double.infinity,
-            child: DoneButtonWidget(
+            child: CustomeElevatedButton(
               title: "Save Changes",
               onTap: () async {
                 if (_form.currentState?.validate() ?? false) {
-                  final sharedPref = await SharedPreferences.getInstance();
-                  await sharedPref.setString(
+                  await PrefrenceManager().setString(
                     "username",
                     _userNameController.text,
                   );
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MainScreen()),
                   );
@@ -63,34 +72,19 @@ class _UserDetailsState extends State<UserDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "User Name",
-                      style: TextStyle(
-                        color: Color(0xFFFFFCFC),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    // add name
-                    InputFieldWidget(
+                    // add user name
+                    CustomeTextFormFieldWidget(
+                      title: "User Name",
                       maxLine: 1,
                       fieldName: "e.g. Sarah Khalid",
                       controller: _userNameController,
                       addBorder: true,
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      "Motivation Quote",
-                      style: TextStyle(
-                        color: Color(0xFFFFFCFC),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    // add name
-                    InputFieldWidget(
+
+                    // add Motivation Quote
+                    CustomeTextFormFieldWidget(
+                      title: "Motivation Quote",
                       maxLine: 5,
                       fieldName: "One task at a time. One step closer.",
                       controller: _motivationController,

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_application_4/widgets/empty_task_widget.dart';
 import 'package:flutter_application_4/widgets/task_list_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CompeleteTaskScreen extends StatefulWidget {
   const CompeleteTaskScreen({super.key});
@@ -16,8 +16,7 @@ class CompeleteTaskScreen extends StatefulWidget {
 class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
   List<TaskModel> _compeleteTask = [];
   Future _getTasks() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    final getSharedPref = sharedPref.getString("allTasks");
+    final getSharedPref = PrefrenceManager().getString("allTasks");
     if (getSharedPref != null) {
       setState(() {
         _compeleteTask = (jsonDecode(getSharedPref) as List)
@@ -43,15 +42,12 @@ class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 18.0, left: 18),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Completed Tasks",
-                        style: TextStyle(
-                          color: Color(0xFFFFFCFC),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge!
+                            .copyWith(fontSize: 20),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 20),
                     ],
@@ -61,8 +57,9 @@ class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
               TaskListWidget(
                 tasks: _compeleteTask,
                 onTap: (value, index) async {
-                  final sharedPref = await SharedPreferences.getInstance();
-                  final getSharedPref = sharedPref.getString("allTasks");
+                  final getSharedPref = PrefrenceManager().getString(
+                    "allTasks",
+                  );
                   setState(() {
                     _compeleteTask[index].isDone = value ?? false;
                   });
@@ -76,7 +73,7 @@ class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
                           element.taskId == _compeleteTask[index].taskId,
                     );
                     updatedTask[taskIndex] = _compeleteTask[index];
-                    await sharedPref.setString(
+                    await PrefrenceManager().setString(
                       "allTasks",
                       jsonEncode(updatedTask),
                     );

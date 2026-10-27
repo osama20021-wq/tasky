@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_application_4/screens/add_task_screen.dart';
 import 'package:flutter_application_4/widgets/achived_task.dart';
-import 'package:flutter_application_4/widgets/done_button_widget.dart';
+import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
 import 'package:flutter_application_4/widgets/empty_task_widget.dart';
 import 'package:flutter_application_4/widgets/high_priority_widget.dart';
 import 'package:flutter_application_4/widgets/task_list_widget.dart';
 import 'package:flutter_application_4/widgets/user_welcome_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,15 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TaskModel> tasks = [];
 
   Future _getUsername() async {
-    final sharedPref = await SharedPreferences.getInstance();
     setState(() {
-      username = sharedPref.getString("username") ?? "guest";
+      username = PrefrenceManager().getString("username") ?? "guest";
     });
   }
 
   Future _getTasks() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    final getSharedPref = sharedPref.getString("allTasks");
+    final getSharedPref = PrefrenceManager().getString("allTasks");
     if (getSharedPref != null) {
       setState(() {
         tasks = (jsonDecode(getSharedPref) as List)
@@ -52,13 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _changeBox(bool? value, int index) async {
-    final sharedPref = await SharedPreferences.getInstance();
-
     setState(() {
       tasks[index].isDone = value ?? false;
       _calculate();
     });
-    await sharedPref.setString("allTasks", jsonEncode(tasks));
+    await PrefrenceManager().setString("allTasks", jsonEncode(tasks));
   }
 
   @override
@@ -74,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: SizedBox(
         height: 40,
         width: 167,
-        child: DoneButtonWidget(
+        child: CustomeElevatedButton(
           title: "Add New Task",
           onTap: () async {
             bool? result = await Navigator.push(
@@ -116,11 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 20),
                         Text(
                           "My Tasks",
-                          style: TextStyle(
-                            color: Color(0xFFFFFCFC),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontSize: 20),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 16),
                       ],

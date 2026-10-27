@@ -25,16 +25,15 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF181818),
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        statusBarIconBrightness: Theme.of(context).brightness,
       ),
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Color(0xFF181818),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           selectedItemColor: Color(0xFF15B86C),
-          unselectedItemColor: Color(0xFFFFFCFC),
+          unselectedItemColor: Theme.of(context).secondaryHeaderColor,
           currentIndex: _currentIndex,
           onTap: (int? value) {
             setState(() {
@@ -47,7 +46,9 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 "images/Icon-home.svg",
                 colorFilter: ColorFilter.mode(
-                  _currentIndex == 0 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
+                  _currentIndex == 0
+                      ? Color(0xFF15B86C)
+                      : Theme.of(context).secondaryHeaderColor,
                   BlendMode.srcIn,
                 ),
               ),
@@ -57,7 +58,9 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 "images/Icon-todo.svg",
                 colorFilter: ColorFilter.mode(
-                  _currentIndex == 1 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
+                  _currentIndex == 1
+                      ? Color(0xFF15B86C)
+                      : Theme.of(context).secondaryHeaderColor,
                   BlendMode.srcIn,
                 ),
               ),
@@ -67,7 +70,9 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 "images/Icon-completed.svg",
                 colorFilter: ColorFilter.mode(
-                  _currentIndex == 2 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
+                  _currentIndex == 2
+                      ? Color(0xFF15B86C)
+                      : Theme.of(context).secondaryHeaderColor,
                   BlendMode.srcIn,
                 ),
               ),
@@ -77,7 +82,9 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 "images/Icon-person.svg",
                 colorFilter: ColorFilter.mode(
-                  _currentIndex == 3 ? Color(0xFF15B86C) : Color(0xFFFFFCFC),
+                  _currentIndex == 3
+                      ? Color(0xFF15B86C)
+                      : Theme.of(context).secondaryHeaderColor,
                   BlendMode.srcIn,
                 ),
               ),

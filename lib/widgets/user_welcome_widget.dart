@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -24,39 +25,35 @@ class UserWelcomeWidget extends StatelessWidget {
                   children: [
                     Text(
                       "Good Evening ,$username",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFFFFFCFC),
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                     Text(
                       "One task at a time. One steps\ncloser.",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFFC6C6C6),
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
                   ],
                 ),
               ),
               CircleAvatar(
-                backgroundColor: Color(0xFF282828),
+                backgroundColor: Theme.of(context).cardColor,
                 child: SizedBox(
                   height: 34,
                   width: 34,
                   child: IconButton(
-                    color: Color(0xFF282828),
-                    onPressed: () {},
+                    color: Theme.of(context).cardColor,
+                    onPressed: () async {
+                      await ThemeController().toggleTheme();
+                    },
                     icon: SvgPicture.asset(
-                      "images/Icon-light.svg",
+                      ThemeController().isDark()
+                          ? "images/Icon-light.svg"
+                          : "images/Leading-element.svg",
                       colorFilter: ColorFilter.mode(
-                        Color(0xFFFFFCFC),
+                        Theme.of(context).secondaryHeaderColor,
                         BlendMode.srcIn,
                       ),
                       height: 18,
@@ -73,23 +70,17 @@ class UserWelcomeWidget extends StatelessWidget {
               children: [
                 Text(
                   "Yuhuu ,Your work Is ",
-                  style: TextStyle(
-                    fontSize: 32,
-                    color: Color(0xFFFFFCFC),
-                    fontWeight: FontWeight.w400,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge!
+                      .copyWith(fontSize: 32),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   children: [
                     Text(
                       "almost done ! ",
-                      style: TextStyle(
-                        fontSize: 32,
-                        color: Color(0xFFFFFCFC),
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge!
+                          .copyWith(fontSize: 32),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SvgPicture.asset(
                       "images/waving-hand.svg",

@@ -15,27 +15,20 @@ class EmptyTaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         username != null
             ? UserWelcomeWidget(username: username ?? "")
             : Text(
                 pageTitle ?? "",
-                style: TextStyle(
-                  color: Color(0xFFFFFCFC),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge
+                    ?.copyWith(fontSize: 20),
               ),
         Expanded(
           child: Center(
             child: Text(
               emptyTaskMessage,
-              style: TextStyle(
-                color: Color(0xFFFFFCFC),
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge!
+                  .copyWith(fontSize: 20),
             ),
           ),
         ),

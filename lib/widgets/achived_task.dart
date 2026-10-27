@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/themes/theme_controller.dart';
 
 class AchivedTask extends StatelessWidget {
   AchivedTask({
@@ -19,8 +20,11 @@ class AchivedTask extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF282828),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
+        border: ThemeController().isDark()
+            ? null
+            : BoxBorder.all(color: Color(0xFFD1DAD6)),
       ),
       child: Row(
         children: [
@@ -29,19 +33,11 @@ class AchivedTask extends StatelessWidget {
             children: [
               Text(
                 "Achieved Tasks",
-                style: TextStyle(
-                  color: Color(0xFFFFFCFC),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               Text(
                 "$achivedTask Out of $totalTask Done",
-                style: TextStyle(
-                  color: Color(0xFFC6C6C6),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
@@ -60,11 +56,7 @@ class AchivedTask extends StatelessWidget {
               ),
               Text(
                 "${(persentage * 100).toInt()}%",
-                style: TextStyle(
-                  color: Color(0xFFFFFCFC),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
