@@ -48,7 +48,6 @@ class _ToDoTaskScreenState extends State<ToDoTaskScreen> {
                         "To Do Tasks",
                         style: Theme.of(context).textTheme.bodyLarge!
                             .copyWith(fontSize: 20),
-                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 20),
                     ],
@@ -64,15 +63,38 @@ class _ToDoTaskScreenState extends State<ToDoTaskScreen> {
                   setState(() {
                     _toDoTasks[index].isDone = value ?? false;
                   });
+
+                  if (getSharedPref != null) {
+                    List<TaskModel> updatedTask = (jsonDecode(
+                      getSharedPref,
+                    ) as List).map((e) => TaskModel.fromJson(e)).toList();
+                    int taskIndex = updatedTask.indexWhere(
+                      (element) => element.taskId == _toDoTasks[index].taskId,
+                    );
+                    updatedTask[taskIndex] = _toDoTasks[index];
+                    await PrefrenceManager().setString(
+                      "allTasks",
+                      jsonEncode(updatedTask),
+                    );
+                    _getTasks();
+                  }
+                },
+
+                onTapDelete: (index) async {
+                  final getSharedPref = PrefrenceManager().getString(
+                    "allTasks",
+                  );
                   if (getSharedPref != null) {
                     List<TaskModel> updatedTask = (jsonDecode(
                       getSharedPref,
                     ) as List).map((e) => TaskModel.fromJson(e)).toList();
                     int currentIndex = updatedTask.indexWhere(
-                      (element) => element.taskId == updatedTask[index].taskId,
+                      (element) => element.taskId == _toDoTasks[index].taskId,
                     );
+                    setState(() {
+                      updatedTask.removeAt(currentIndex);
+                    });
 
-                    updatedTask[currentIndex] = _toDoTasks[index];
                     await PrefrenceManager().setString(
                       "allTasks",
                       jsonEncode(updatedTask),

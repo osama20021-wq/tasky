@@ -13,7 +13,12 @@ ThemeData darkTheme = ThemeData(
     backgroundColor: Color(0xFF181818),
     foregroundColor: Color(0xFFF6F7F9),
   ),
-
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Color(0xFF181818),
+    selectedItemColor: Color(0xFF15B86C),
+    unselectedItemColor: Color(0xFFFFFCFC),
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       padding: EdgeInsets.zero,
@@ -43,6 +48,11 @@ ThemeData darkTheme = ThemeData(
       fontSize: 14,
       color: Color(0xFFC6C6C6),
       fontWeight: FontWeight.w400,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 14,
+      color: Color(0xFFFFFCFC),
+      fontWeight: FontWeight.w500,
     ),
   ),
 );

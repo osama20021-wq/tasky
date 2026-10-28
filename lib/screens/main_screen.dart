@@ -30,10 +30,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          selectedItemColor: Color(0xFF15B86C),
-          unselectedItemColor: Theme.of(context).secondaryHeaderColor,
           currentIndex: _currentIndex,
           onTap: (int? value) {
             setState(() {
@@ -43,55 +39,35 @@ class _MainScreenState extends State<MainScreen> {
           items: [
             BottomNavigationBarItem(
               label: "Home",
-              icon: SvgPicture.asset(
-                "images/Icon-home.svg",
-                colorFilter: ColorFilter.mode(
-                  _currentIndex == 0
-                      ? Color(0xFF15B86C)
-                      : Theme.of(context).secondaryHeaderColor,
-                  BlendMode.srcIn,
-                ),
-              ),
+              icon: _svgPicture("images/Icon-home.svg", 0),
             ),
             BottomNavigationBarItem(
               label: "To Do",
-              icon: SvgPicture.asset(
-                "images/Icon-todo.svg",
-                colorFilter: ColorFilter.mode(
-                  _currentIndex == 1
-                      ? Color(0xFF15B86C)
-                      : Theme.of(context).secondaryHeaderColor,
-                  BlendMode.srcIn,
-                ),
-              ),
+              icon: _svgPicture("images/Icon-todo.svg", 1),
             ),
             BottomNavigationBarItem(
               label: "Completed",
-              icon: SvgPicture.asset(
-                "images/Icon-completed.svg",
-                colorFilter: ColorFilter.mode(
-                  _currentIndex == 2
-                      ? Color(0xFF15B86C)
-                      : Theme.of(context).secondaryHeaderColor,
-                  BlendMode.srcIn,
-                ),
-              ),
+              icon: _svgPicture("images/Icon-completed.svg", 2),
             ),
             BottomNavigationBarItem(
               label: "Profile",
-              icon: SvgPicture.asset(
-                "images/Icon-person.svg",
-                colorFilter: ColorFilter.mode(
-                  _currentIndex == 3
-                      ? Color(0xFF15B86C)
-                      : Theme.of(context).secondaryHeaderColor,
-                  BlendMode.srcIn,
-                ),
-              ),
+              icon: _svgPicture("images/Icon-person.svg", 3),
             ),
           ],
         ),
         body: SafeArea(child: screens[_currentIndex]),
+      ),
+    );
+  }
+
+  SvgPicture _svgPicture(String path, int index) {
+    return SvgPicture.asset(
+      path,
+      colorFilter: ColorFilter.mode(
+        _currentIndex == index
+            ? Color(0xFF15B86C)
+            : Theme.of(context).secondaryHeaderColor,
+        BlendMode.srcIn,
       ),
     );
   }

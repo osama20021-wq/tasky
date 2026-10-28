@@ -56,7 +56,8 @@ class AchivedTask extends StatelessWidget {
               ),
               Text(
                 "${(persentage * 100).toInt()}%",
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge!
+                    .copyWith(fontSize: 14),
               ),
             ],
           ),

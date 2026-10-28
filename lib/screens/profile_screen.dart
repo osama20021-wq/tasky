@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/core/services/prefrence_manager.dart';
+import 'package:flutter_application_4/core/themes/custome_svg_picture.dart';
 import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/screens/user_details.dart';
 import 'package:flutter_application_4/screens/welcome_screen.dart';
 import 'package:flutter_application_4/widgets/custome_list_tile_widget.dart';
 import 'package:flutter_application_4/core/widget/task_switch_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -60,10 +60,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundImage: AssetImage("images/person.png"),
                           ),
                           CircleAvatar(
-                            backgroundColor: Color(0xFF282828),
+                            maxRadius: 18,
+                            backgroundColor: Theme.of(context).cardColor,
                             child: IconButton(
                               onPressed: () {},
-                              icon: SvgPicture.asset("images/camera-01.svg"),
+                              icon: CustomeSvgPicture(
+                                path: "images/camera-01.svg",
+                                height: 22,
+                                width: 22,
+                              ),
                             ),
                           ),
                         ],
@@ -101,19 +106,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context) => UserDetails(username: username),
                         ),
                       ),
-                      leading: SvgPicture.asset(
-                        "images/Icon-person.svg",
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).secondaryHeaderColor,
-                          BlendMode.srcIn,
-                        ),
+                      leading: CustomeSvgPicture(
+                        path: "images/Icon-person.svg",
+                        height: 20,
+                        width: 20,
                       ),
-                      trailing: SvgPicture.asset(
-                        "images/arrow-right.svg",
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).secondaryHeaderColor,
-                          BlendMode.srcIn,
-                        ),
+
+                      trailing: CustomeSvgPicture(
+                        path: "images/arrow-right.svg",
+                        height: 24,
+                        width: 24,
                       ),
                     ),
                     Divider(),
@@ -124,12 +126,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       contentPadding: EdgeInsets.zero,
                       titleTextStyle: Theme.of(context).textTheme.bodyLarge,
                       title: Text("Dark Mode"),
-                      leading: SvgPicture.asset(
-                        "images/Leading-element.svg",
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).secondaryHeaderColor,
-                          BlendMode.srcIn,
-                        ),
+                      leading: CustomeSvgPicture(
+                        path: "images/Leading-element.svg",
+                        height: 24,
+                        width: 24,
                       ),
                       trailing: TaskSwitchWidget(
                         isDone: ThemeController().isDark(),
@@ -152,20 +152,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       },
 
-                      leading: SvgPicture.asset(
-                        "images/log-out-01.svg",
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).secondaryHeaderColor,
-                          BlendMode.srcIn,
-                        ),
+                      leading: CustomeSvgPicture(
+                        path: "images/log-out-01.svg",
+                        height: 24,
+                        width: 24,
                       ),
-                      trailing: SvgPicture.asset(
-                        "images/arrow-right.svg",
-
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).secondaryHeaderColor,
-                          BlendMode.srcIn,
-                        ),
+                      trailing: CustomeSvgPicture(
+                        path: "images/arrow-right.svg",
+                        height: 24,
+                        width: 24,
                       ),
                     ),
                   ],

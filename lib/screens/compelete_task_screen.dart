@@ -47,7 +47,6 @@ class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
                         "Completed Tasks",
                         style: Theme.of(context).textTheme.bodyLarge!
                             .copyWith(fontSize: 20),
-                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 20),
                     ],
@@ -73,6 +72,29 @@ class _CompeleteTaskScreenState extends State<CompeleteTaskScreen> {
                           element.taskId == _compeleteTask[index].taskId,
                     );
                     updatedTask[taskIndex] = _compeleteTask[index];
+                    await PrefrenceManager().setString(
+                      "allTasks",
+                      jsonEncode(updatedTask),
+                    );
+                    _getTasks();
+                  }
+                },
+                onTapDelete: (index) async {
+                  final getSharedPref = PrefrenceManager().getString(
+                    "allTasks",
+                  );
+                  if (getSharedPref != null) {
+                    List<TaskModel> updatedTask = (jsonDecode(
+                      getSharedPref,
+                    ) as List).map((e) => TaskModel.fromJson(e)).toList();
+                    int currentIndex = updatedTask.indexWhere(
+                      (element) =>
+                          element.taskId == _compeleteTask[index].taskId,
+                    );
+                    setState(() {
+                      updatedTask.removeAt(currentIndex);
+                    });
+
                     await PrefrenceManager().setString(
                       "allTasks",
                       jsonEncode(updatedTask),

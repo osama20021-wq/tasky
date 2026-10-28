@@ -57,6 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
     await PrefrenceManager().setString("allTasks", jsonEncode(tasks));
   }
 
+  Future _remove(int index) async {
+    setState(() {
+      tasks.removeAt(index);
+    });
+    await PrefrenceManager().setString("allTasks", jsonEncode(tasks));
+  }
+
   @override
   void initState() {
     _getUsername();
@@ -125,6 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   tasks: tasks,
                   onTap: (value, index) {
                     _changeBox(value, index);
+                  },
+
+                  onTapDelete: (index) async {
+                    await _remove(index);
                   },
                 ),
                 SliverToBoxAdapter(child: SizedBox(height: 60)),

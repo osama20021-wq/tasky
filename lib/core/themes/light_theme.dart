@@ -13,6 +13,13 @@ ThemeData lightTheme = ThemeData(
     backgroundColor: Color(0xFFF6F7F9),
     foregroundColor: Color(0xFF181818),
   ),
+
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Color(0xFFF6F7F9),
+    selectedItemColor: Color(0xFF15B86C),
+    unselectedItemColor: Color(0xFF181818),
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       padding: EdgeInsets.zero,

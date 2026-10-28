@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_4/core/services/prefrence_manager.dart';
+import 'package:flutter_application_4/core/themes/custome_svg_picture.dart';
 import 'package:flutter_application_4/screens/main_screen.dart';
 import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
 import 'package:flutter_application_4/core/widget/custome_text_form_field_widget.dart';
-import 'package:flutter_svg/svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});
@@ -38,8 +38,8 @@ class WelcomeScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                "images/Vector.svg",
+                              CustomeSvgPicture.withoutColor(
+                                path: "images/Vector.svg",
                                 height: 42,
                                 width: 42,
                               ),
@@ -60,8 +60,8 @@ class WelcomeScreen extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodyLarge!
                                     .copyWith(fontSize: 24),
                               ),
-                              SvgPicture.asset(
-                                "images/waving-hand.svg",
+                              CustomeSvgPicture.withoutColor(
+                                path: "images/waving-hand.svg",
                                 height: 28,
                                 width: 28,
                               ),
@@ -72,8 +72,8 @@ class WelcomeScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           SizedBox(height: 24),
-                          SvgPicture.asset(
-                            "images/pana.svg",
+                          CustomeSvgPicture.withoutColor(
+                            path: "images/pana.svg",
                             height: 205,
                             width: 215,
                           ),

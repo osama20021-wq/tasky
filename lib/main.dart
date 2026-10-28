@@ -11,7 +11,7 @@ Future<void> main() async {
   await PrefrenceManager().init();
   ThemeController().init();
 
-  String username = PrefrenceManager().getString("username") ?? "Guest";
+  String? username = PrefrenceManager().getString("username");
 
   runApp(MyApp(username: username));
 }

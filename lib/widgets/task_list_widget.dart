@@ -1,13 +1,20 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/enums/task_item_action_enum.dart';
 import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 
 class TaskListWidget extends StatelessWidget {
-  TaskListWidget({super.key, required this.tasks, required this.onTap});
+  TaskListWidget({
+    super.key,
+    required this.tasks,
+    required this.onTap,
+    required this.onTapDelete,
+  });
   final List<TaskModel> tasks;
   Function(bool? value, int index) onTap;
+  Function(int index) onTapDelete;
   @override
   Widget build(BuildContext context) {
     return SliverList.builder(
@@ -70,14 +77,30 @@ class TaskListWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {},
+              PopupMenuButton<TaskItemActionEnum>(
                 icon: Icon(
                   Icons.more_vert_outlined,
                   color: tasks[index].isDone
                       ? Theme.of(context).primaryColor
                       : Theme.of(context).primaryColorDark,
                 ),
+                onSelected: (value) async {
+                  switch (value) {
+                    case TaskItemActionEnum.delete:
+                      {
+                        await onTapDelete(index);
+                      }
+
+                    case TaskItemActionEnum.edit:
+                  }
+                },
+                position: PopupMenuPosition.under,
+
+                itemBuilder: (context) => [
+                  ...TaskItemActionEnum.values.map((e) {
+                    return PopupMenuItem(value: e, child: Text(e.name));
+                  }),
+                ],
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/themes/custome_svg_picture.dart';
 import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/models/task_model.dart';
 import 'package:flutter_svg/svg.dart';
@@ -48,14 +49,10 @@ class UserWelcomeWidget extends StatelessWidget {
                     onPressed: () async {
                       await ThemeController().toggleTheme();
                     },
-                    icon: SvgPicture.asset(
-                      ThemeController().isDark()
+                    icon: CustomeSvgPicture(
+                      path: ThemeController().isDark()
                           ? "images/Icon-light.svg"
                           : "images/Leading-element.svg",
-                      colorFilter: ColorFilter.mode(
-                        Theme.of(context).secondaryHeaderColor,
-                        BlendMode.srcIn,
-                      ),
                       height: 18,
                       width: 18,
                     ),
