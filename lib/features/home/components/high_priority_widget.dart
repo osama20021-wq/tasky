@@ -98,17 +98,14 @@ class HighPriorityWidget extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFFD1DAD6),
-                        width: 1.5,
-                      ),
+                      border: Border.all(color: const Color(0xFFD1DAD6)),
                     ),
                     child: IconButton(
                       onPressed: () {},
 
                       icon: Icon(
                         Icons.arrow_outward,
-                        color: Color(0xFF15221B),
+                        color: Theme.of(context).primaryColorDark,
                         size: 24,
                       ),
                       padding: EdgeInsets.zero,

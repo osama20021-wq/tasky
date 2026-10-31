@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String username = "";
+  late String username;
   int totalTask = 0;
   int achivedTask = 0;
   double persentage = 0;
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future _getUsername() async {
     setState(() {
-      username = PrefrenceManager().getString("username") ?? "guest";
+      username = PrefrenceManager().getString("username")!;
     });
   }
 
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     persentage = totalTask != 0 ? (achivedTask / totalTask) : 0;
   }
 
-  void _changeBox(bool? value, int index) async {
+  Future _changeBox(bool? value, int index) async {
     setState(() {
       tasks[index].isDone = value ?? false;
       _calculate();
@@ -130,18 +130,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 TaskListWidget(
                   tasks: tasks,
-                  onTap: (value, index) {
-                    _changeBox(value, index);
+                  onTapDone: (value, index) async {
+                    await _changeBox(value, index);
                   },
 
                   onTapDelete: (index) async {
                     await _remove(index);
                   },
+                  onTapEdit: () async => await _getTasks(),
                 ),
                 SliverToBoxAdapter(child: SizedBox(height: 60)),
               ],
             )
-          : EmptyTaskWidget(username: username, emptyTaskMessage: "No Tasks"),
+          : EmptyTaskWidget(
+              username: username,
+              emptyTaskMessage: "No Tasks Available",
+            ),
     );
   }
 }

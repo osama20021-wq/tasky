@@ -1,8 +1,8 @@
 class TaskModel {
   final int taskId;
-  final String taskName;
-  final String taskDescription;
-  final bool isHighPriority;
+  late String taskName;
+  late String taskDescription;
+  late bool isHighPriority;
   bool isDone;
 
   TaskModel({

@@ -18,10 +18,13 @@ class EmptyTaskWidget extends StatelessWidget {
       children: [
         username != null
             ? UserWelcomeWidget(username: username ?? "")
-            : Text(
-                pageTitle ?? "",
-                style: Theme.of(context).textTheme.bodyLarge
-                    ?.copyWith(fontSize: 20),
+            : SizedBox(
+                height: 80,
+                child: Text(
+                  pageTitle ?? "",
+                  style: Theme.of(context).textTheme.bodyLarge
+                      ?.copyWith(fontSize: 20),
+                ),
               ),
         Expanded(
           child: Center(

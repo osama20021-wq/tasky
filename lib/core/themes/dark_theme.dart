@@ -8,11 +8,16 @@ ThemeData darkTheme = ThemeData(
   cardColor: Color(0xFF282828),
   secondaryHeaderColor: Color(0xFFFFFCFC),
   brightness: Brightness.light,
+  dividerColor: Color(0xFF6E6E6E),
+
   appBarTheme: AppBarTheme(
     centerTitle: false,
     backgroundColor: Color(0xFF181818),
     foregroundColor: Color(0xFFF6F7F9),
   ),
+
+  splashColor: Colors.transparent,
+
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
     backgroundColor: Color(0xFF181818),
@@ -27,6 +32,12 @@ ThemeData darkTheme = ThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(30),
       ),
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: Color(0xFFFFFCFC),
+      textStyle: TextStyle(fontSize: 20),
     ),
   ),
   inputDecorationTheme: InputDecorationThemeData(

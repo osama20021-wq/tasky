@@ -28,6 +28,43 @@ class _ToDoTaskScreenState extends State<ToDoTaskScreen> {
     }
   }
 
+  Future _onTapDone(bool? value, int index) async {
+    final getSharedPref = PrefrenceManager().getString("allTasks");
+    setState(() {
+      _toDoTasks[index].isDone = value ?? false;
+    });
+
+    if (getSharedPref != null) {
+      List<TaskModel> updatedTask = (jsonDecode(getSharedPref) as List)
+          .map((e) => TaskModel.fromJson(e))
+          .toList();
+      int taskIndex = updatedTask.indexWhere(
+        (element) => element.taskId == _toDoTasks[index].taskId,
+      );
+      updatedTask[taskIndex] = _toDoTasks[index];
+      await PrefrenceManager().setString("allTasks", jsonEncode(updatedTask));
+      _getTasks();
+    }
+  }
+
+  Future _onTapDelete(int index) async {
+    final getSharedPref = PrefrenceManager().getString("allTasks");
+    if (getSharedPref != null) {
+      List<TaskModel> updatedTask = (jsonDecode(getSharedPref) as List)
+          .map((e) => TaskModel.fromJson(e))
+          .toList();
+      int currentIndex = updatedTask.indexWhere(
+        (element) => element.taskId == _toDoTasks[index].taskId,
+      );
+      setState(() {
+        updatedTask.removeAt(currentIndex);
+      });
+
+      await PrefrenceManager().setString("allTasks", jsonEncode(updatedTask));
+      _getTasks();
+    }
+  }
+
   @override
   void initState() {
     _getTasks();
@@ -41,7 +78,10 @@ class _ToDoTaskScreenState extends State<ToDoTaskScreen> {
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 18.0, left: 18),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Column(
                     children: [
                       Text(
@@ -56,52 +96,11 @@ class _ToDoTaskScreenState extends State<ToDoTaskScreen> {
               ),
               TaskListWidget(
                 tasks: _toDoTasks,
-                onTap: (value, index) async {
-                  final getSharedPref = PrefrenceManager().getString(
-                    "allTasks",
-                  );
-                  setState(() {
-                    _toDoTasks[index].isDone = value ?? false;
-                  });
+                onTapDone: (value, index) async =>
+                    await _onTapDone(value, index),
 
-                  if (getSharedPref != null) {
-                    List<TaskModel> updatedTask = (jsonDecode(
-                      getSharedPref,
-                    ) as List).map((e) => TaskModel.fromJson(e)).toList();
-                    int taskIndex = updatedTask.indexWhere(
-                      (element) => element.taskId == _toDoTasks[index].taskId,
-                    );
-                    updatedTask[taskIndex] = _toDoTasks[index];
-                    await PrefrenceManager().setString(
-                      "allTasks",
-                      jsonEncode(updatedTask),
-                    );
-                    _getTasks();
-                  }
-                },
-
-                onTapDelete: (index) async {
-                  final getSharedPref = PrefrenceManager().getString(
-                    "allTasks",
-                  );
-                  if (getSharedPref != null) {
-                    List<TaskModel> updatedTask = (jsonDecode(
-                      getSharedPref,
-                    ) as List).map((e) => TaskModel.fromJson(e)).toList();
-                    int currentIndex = updatedTask.indexWhere(
-                      (element) => element.taskId == _toDoTasks[index].taskId,
-                    );
-                    setState(() {
-                      updatedTask.removeAt(currentIndex);
-                    });
-
-                    await PrefrenceManager().setString(
-                      "allTasks",
-                      jsonEncode(updatedTask),
-                    );
-                    _getTasks();
-                  }
-                },
+                onTapDelete: (index) async => await _onTapDelete(index),
+                onTapEdit: () async => await _getTasks(),
               ),
             ],
           )

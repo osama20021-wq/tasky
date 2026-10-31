@@ -1,4 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/core/services/prefrence_manager.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_application_4/screens/user_details.dart';
 import 'package:flutter_application_4/screens/welcome_screen.dart';
 import 'package:flutter_application_4/widgets/custome_list_tile_widget.dart';
 import 'package:flutter_application_4/core/widget/task_switch_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,28 +21,17 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String username = "";
+  final String username = PrefrenceManager().getString("username")!;
 
-  @override
-  void initState() {
-    getusername();
-    super.initState();
-  }
-
-  Future getusername() async {
-    setState(() {
-      username = PrefrenceManager().getString("username") ?? "Guest";
-    });
-  }
+  String? selectedImage = PrefrenceManager().getString("image");
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 18),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
             child: Column(
               children: [
                 Text(
@@ -46,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: Theme.of(context).textTheme.bodyLarge!
                       .copyWith(fontSize: 20),
                 ),
-                // why?
                 SizedBox(height: 24),
                 Center(
                   child: Column(
@@ -57,13 +49,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: Colors.transparent,
                             radius: 60,
-                            backgroundImage: AssetImage("images/person.png"),
+                            backgroundImage: selectedImage == null
+                                ? AssetImage("images/person.png")
+                                : FileImage(File(selectedImage!)),
                           ),
                           CircleAvatar(
                             maxRadius: 18,
                             backgroundColor: Theme.of(context).cardColor,
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _showImageSourceDialog(
+                                  context: context,
+                                  setImage: (file) {
+                                    _saveImage(file);
+                                    setState(() {
+                                      selectedImage = file.path;
+                                    });
+                                  },
+                                );
+                              },
                               icon: CustomeSvgPicture(
                                 path: "images/camera-01.svg",
                                 height: 22,
@@ -118,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 24,
                       ),
                     ),
-                    Divider(),
+                    Divider(color: Theme.of(context).dividerColor),
                     ListTile(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(20),
@@ -138,12 +142,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       ),
                     ),
-                    Divider(),
+                    Divider(color: Theme.of(context).dividerColor),
                     CustomeListTileWidget(
                       title: "Log out",
                       onTap: () async {
                         await PrefrenceManager().remove("username");
                         await PrefrenceManager().remove("allTasks");
+                        await PrefrenceManager().remove("image");
+
                         await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -171,5 +177,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  void _showImageSourceDialog({
+    required BuildContext context,
+    required Function(XFile file) setImage,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          backgroundColor: Theme.of(context).cardColor,
+          title: Text(
+            "Choose image source",
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+          children: [
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.pop(context);
+                final XFile? image = await ImagePicker().pickImage(
+                  source: ImageSource.gallery,
+                );
+                if (image != null) {
+                  setImage(image);
+                }
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.photo_library,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                  SizedBox(width: 8),
+                  Text("Gallery", style: Theme.of(context).textTheme.bodyLarge),
+                ],
+              ),
+            ),
+
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.pop(context);
+                final XFile? image = await ImagePicker().pickImage(
+                  source: ImageSource.camera,
+                );
+                if (image != null) {
+                  setImage(image);
+                }
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.camera,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                  SizedBox(width: 8),
+                  Text("Camera", style: Theme.of(context).textTheme.bodyLarge),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _saveImage(XFile file) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final newFile = await File(file.path).copy("${appDir.path}/${file.name}");
+    await PrefrenceManager().setString("image", newFile.path);
   }
 }

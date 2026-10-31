@@ -7,12 +7,16 @@ ThemeData lightTheme = ThemeData(
   secondaryHeaderColor: Color(0xFF181818),
   primaryColorDark: Color(0xFF3A4640),
   cardColor: Color(0xFFFFFFFF),
+  dividerColor: Color(0xFFCAC4D0),
+
   brightness: Brightness.dark,
   appBarTheme: AppBarTheme(
     centerTitle: false,
     backgroundColor: Color(0xFFF6F7F9),
     foregroundColor: Color(0xFF181818),
   ),
+
+  splashColor: Colors.transparent,
 
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
@@ -28,6 +32,13 @@ ThemeData lightTheme = ThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(30),
       ),
+    ),
+  ),
+
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: Colors.black,
+      textStyle: TextStyle(fontSize: 20),
     ),
   ),
 

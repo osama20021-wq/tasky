@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/core/services/prefrence_manager.dart';
 import 'package:flutter_application_4/core/themes/custome_svg_picture.dart';
 import 'package:flutter_application_4/core/themes/theme_controller.dart';
 import 'package:flutter_application_4/models/task_model.dart';
@@ -18,7 +21,13 @@ class UserWelcomeWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.asset("images/person.png"),
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+
+                backgroundImage: PrefrenceManager().getString("image") == null
+                    ? AssetImage("images/person.png")
+                    : FileImage(File(PrefrenceManager().getString("image")!)),
+              ),
               SizedBox(width: 8),
               Expanded(
                 child: Column(
