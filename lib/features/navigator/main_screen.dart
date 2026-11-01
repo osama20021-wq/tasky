@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_4/screens/compelete_task_screen.dart';
-import 'package:flutter_application_4/screens/home_screen.dart';
-import 'package:flutter_application_4/screens/profile_screen.dart';
-import 'package:flutter_application_4/screens/to_do_task_screen.dart';
+import 'package:flutter_application_4/features/tasks/compelete_task_screen.dart';
+import 'package:flutter_application_4/features/home/screens/home_screen.dart';
+import 'package:flutter_application_4/features/profile/profile_screen.dart';
+import 'package:flutter_application_4/features/tasks/to_do_task_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MainScreen extends StatefulWidget {
