@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_4/core/services/prefrence_manager.dart';
-import 'package:flutter_application_4/screens/main_screen.dart';
-import 'package:flutter_application_4/core/widget/custome_elevated_button.dart';
-import 'package:flutter_application_4/core/widget/custome_text_form_field_widget.dart';
+import 'package:flutter_application_4/features/navigator/main_screen.dart';
+import 'package:flutter_application_4/core/widget/program_widget/custome_elevated_button.dart';
+import 'package:flutter_application_4/core/widget/program_widget/custome_text_form_field_widget.dart';
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key, required this.username});
